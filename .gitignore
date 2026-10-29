@@ -1,0 +1,8 @@
+node_modules/
+.env
+data/api_test*
+data/e2e_test*
+data/test_*
+npm-debug.log*
+.DS_Store
+Thumbs.db

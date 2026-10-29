@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VeriRAG • Multi-Document Question Answering with Citations</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h2>VeriRAG</h2>
+          <span class="badge-tag">Dual-Pipeline Engine</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <button id="btn-new-chat" class="btn btn-primary btn-block">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Conversation
+        </button>
+      </div>
+
+      <!-- Upload Zone -->
+      <div class="sidebar-section">
+        <div class="section-header">
+          <h3>Ingest Documents</h3>
+          <span class="badge-mini" id="upload-badge">PDF / DOCX</span>
+        </div>
+
+        <div id="drop-zone" class="drop-zone">
+          <input type="file" id="file-input" multiple accept=".pdf,.docx" style="display: none;">
+          <div class="drop-content">
+            <svg class="drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <p><strong>Click to browse</strong> or drag & drop</p>
+            <span>Supports .pdf & .docx with page tracking</span>
+          </div>
+        </div>
+
+        <div id="upload-progress" class="upload-progress hidden">
+          <div class="spinner"></div>
+          <span id="upload-status-text">Ingesting & indexing chunks...</span>
+        </div>
+      </div>
+
+      <!-- Uploaded Documents List -->
+      <div class="sidebar-section flex-grow">
+        <div class="section-header">
+          <h3>Indexed Knowledge Base</h3>
+          <span class="badge-count" id="doc-count">0</span>
+        </div>
+        <div id="doc-list" class="doc-list">
+          <div class="empty-state">No documents ingested yet</div>
+        </div>
+      </div>
+
+      <!-- System Health Footer -->
+      <div class="sidebar-footer">
+        <div class="footer-stat">
+          <span class="dot-online"></span>
+          <span id="vector-count-label">Vectors: 0</span>
+        </div>
+        <div class="footer-meta" id="model-label">Embedding: Local / OpenAI</div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Workspace -->
+    <main class="main-content">
+      <header class="chat-header">
+        <div class="header-info">
+          <h1>Multi-Document Question Answering</h1>
+          <p>Semantic retrieval, mathematical cosine similarity, strict anti-hallucination & traceable citations</p>
+        </div>
+        <div class="header-badges">
+          <span class="pill-badge" id="pill-active-session">Session: Auto</span>
+          <span class="pill-badge pill-green">Top-K: 5</span>
+          <span class="pill-badge pill-blue">Threshold: 0.70</span>
+        </div>
+      </header>
+
+      <!-- Message History Area -->
+      <div id="chat-messages" class="chat-messages">
+        <div class="welcome-card">
+          <div class="welcome-icon">⚡</div>
+          <h2>Welcome to the VeriRAG Assistant</h2>
+          <p>
+            Upload your PDF or DOCX files on the left to vectorize and index them.
+            The system retrieves context based on cosine similarity, verifies source page numbers, and refuses to hallucinate out-of-scope queries.
+          </p>
+          <div class="sample-queries">
+            <span class="sample-label">Try asking:</span>
+            <button class="sample-chip" data-query="What is the employee paid time off policy?">"What is the PTO policy?"</button>
+            <button class="sample-chip" data-query="Can they roll it over?">"Can they roll it over?" (Follow-up test)</button>
+            <button class="sample-chip" data-query="What is the capital of France?">"Capital of France?" (Hallucination test)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Query Input Bar -->
+      <footer class="chat-footer">
+        <form id="chat-form" class="chat-input-wrapper">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Ask a question about your uploaded documents..."
+            required
+          ></textarea>
+          <button type="submit" id="btn-send" class="btn btn-send" title="Send Question">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+        <div class="input-hints">
+          <span>Responses are strictly grounded in context chunks with traceable [Filename, Page X] citations</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

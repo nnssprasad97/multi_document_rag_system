@@ -1,0 +1,36 @@
+{
+  "name": "rag-system",
+  "version": "1.0.0",
+  "description": "Multi-Document Question Answering RAG System with a Vector Database",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "rag",
+    "vector-database",
+    "embeddings",
+    "llm",
+    "fastapi",
+    "express",
+    "chroma",
+    "qdrant"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "docx": "^9.15.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mammoth": "^1.8.0",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.71.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.20.2",
+    "uuid": "^11.0.3"
+  }
+}
