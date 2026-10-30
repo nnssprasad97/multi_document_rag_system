@@ -58,7 +58,7 @@ const publicDir = path.join(__dirname, '..', 'public');
 app.use(express.static(publicDir));
 
 let server = null;
-if (process.env.NODE_ENV !== 'test') {
+if (require.main === module) {
   server = app.listen(PORT, () => {
     console.log(`=======================================================`);
     console.log(`  VeriRAG System Server Active on port ${PORT}`);
