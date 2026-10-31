@@ -17,7 +17,7 @@ class VectorStore {
    */
   constructor({
     storagePath = './data/vectors.json',
-    similarityThreshold = 0.70,
+    similarityThreshold = 0.65,
     topK = 5,
     provider = process.env.VECTOR_DB_PROVIDER || 'local'
   } = {}) {

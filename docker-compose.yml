@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  rag-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: verirag-system
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-small}
+      - VECTOR_SIMILARITY_THRESHOLD=${VECTOR_SIMILARITY_THRESHOLD:-0.65}
+      - TOP_K=${TOP_K:-5}
+      - DATABASE_URL=sqlite:///./data/rag_history.db
+    volumes:
+      - rag_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  rag_data:
+    driver: local

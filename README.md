@@ -113,6 +113,16 @@ The server will start on `http://localhost:3000`.
 - **Web Interface**: Open your browser at `http://localhost:3000`
 - **Health Endpoint**: `http://localhost:3000/api/health`
 
+### 🐳 Docker Single-Command Setup (Optional)
+You can also launch the entire system inside an isolated container with Docker:
+```bash
+docker compose up -d --build
+```
+Access the application at `http://localhost:3000`. To stop the container:
+```bash
+docker compose down
+```
+
 ---
 
 ## 🧪 Running Automated Tests

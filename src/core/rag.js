@@ -22,7 +22,7 @@ class RagOrchestrator {
     llmService = new LLMService(),
     chunkSize = Number(process.env.CHUNK_SIZE) || 1000,
     chunkOverlap = Number(process.env.CHUNK_OVERLAP) || 200,
-    similarityThreshold = Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.70,
+    similarityThreshold = Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.65,
     topK = Number(process.env.TOP_K) || 5
   } = {}) {
     this.vectorStore = vectorStore;
