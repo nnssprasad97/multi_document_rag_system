@@ -53,25 +53,28 @@ class LLMService {
   static extractCitations(chunks = [], generatedText = '') {
     const citationMap = new Map();
 
-    // Collect all citations directly referenced in the retrieved chunks used
-    for (const chunk of chunks) {
-      const docName = chunk.metadata.filename || 'unknown';
-      const pageNum = Number(chunk.metadata.page_number !== undefined ? chunk.metadata.page_number : chunk.metadata.pageNumber) || 1;
+    // 1. First parse bracketed citations [Filename, Page X] from generatedText
+    const citationRegex = /\[([^,\]]+),\s*Page\s*(\d+)\]/gi;
+    let match;
+    while ((match = citationRegex.exec(generatedText)) !== null) {
+      const docName = match[1].trim();
+      const pageNum = parseInt(match[2].trim(), 10);
       const key = `${docName}::${pageNum}`;
-
-      // Check if chunk is cited or relevant
       citationMap.set(key, {
         document_name: docName,
         page_number: pageNum
       });
     }
 
-    // Also parse bracketed citations [Filename, Page X] from generatedText if present
-    const citationRegex = /\[([^,]+),\s*Page\s*(\d+)\]/gi;
-    let match;
-    while ((match = citationRegex.exec(generatedText)) !== null) {
-      const docName = match[1].trim();
-      const pageNum = parseInt(match[2].trim(), 10);
+    // If explicit citations were present in the generated answer, return them
+    if (citationMap.size > 0) {
+      return Array.from(citationMap.values());
+    }
+
+    // 2. Fallback: if model omitted bracketed citations, map from retrieved context chunks
+    for (const chunk of chunks) {
+      const docName = chunk.metadata.filename || 'unknown';
+      const pageNum = Number(chunk.metadata.page_number !== undefined ? chunk.metadata.page_number : chunk.metadata.pageNumber) || 1;
       const key = `${docName}::${pageNum}`;
       citationMap.set(key, {
         document_name: docName,
@@ -171,6 +174,7 @@ class LLMService {
 
     const matchedChunks = [];
     const matchedSentences = [];
+    const seenSentences = new Set();
 
     for (const chunk of contextChunks) {
       const text = chunk.metadata.text || '';
@@ -183,14 +187,16 @@ class LLMService {
 
       let chunkHasMatch = false;
       for (const sentence of sentences) {
-        const sentenceLower = sentence.toLowerCase();
+        const sentenceClean = sentence.trim();
+        const sentenceLower = sentenceClean.toLowerCase();
         const matchesToken = queryTokens.some((t) => sentenceLower.includes(t));
         const matchesHistory = isPronounQuery && historyContext && queryTokens.some((t) => sentenceLower.includes(t));
 
-        if (matchesToken || matchesHistory) {
+        if ((matchesToken || matchesHistory) && !seenSentences.has(sentenceClean)) {
+          seenSentences.add(sentenceClean);
           chunkHasMatch = true;
           matchedSentences.push({
-            sentence: sentence.trim(),
+            sentence: sentenceClean,
             filename,
             pageNum
           });
