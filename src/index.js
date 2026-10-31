@@ -18,7 +18,7 @@ const createRouter = require('./api/routes');
 // Initialize database & service components
 const vectorStore = new VectorStore({
   storagePath: process.env.VECTOR_STORE_PATH || './data/vectors.json',
-  similarityThreshold: Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.70,
+  similarityThreshold: Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.65,
   topK: Number(process.env.TOP_K) || 5
 });
 
@@ -38,7 +38,7 @@ const ragOrchestrator = new RagOrchestrator({
   llmService,
   chunkSize: Number(process.env.CHUNK_SIZE) || 1000,
   chunkOverlap: Number(process.env.CHUNK_OVERLAP) || 200,
-  similarityThreshold: Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.70,
+  similarityThreshold: Number(process.env.VECTOR_SIMILARITY_THRESHOLD) || 0.65,
   topK: Number(process.env.TOP_K) || 5
 });
 

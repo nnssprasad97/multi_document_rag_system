@@ -45,7 +45,7 @@ A production-grade, enterprise **Retrieval-Augmented Generation (RAG)** system b
                       v  (Query Vector)
           [ Vector Database Search ]  (Cosine Similarity, Top-K = 5)
                       |
-          < Confidence Threshold Filter (Score >= 0.70) >
+          < Confidence Threshold Filter (Score >= 0.65) >
              /                                      \
     [ Below Threshold ]                    [ Above Threshold ]
             |                                       |
@@ -99,7 +99,7 @@ PORT=3000
 OPENAI_API_KEY=sk-your-openai-key-here
 LLM_MODEL=gpt-4o-mini
 EMBEDDING_MODEL=text-embedding-3-small
-VECTOR_SIMILARITY_THRESHOLD=0.70
+VECTOR_SIMILARITY_THRESHOLD=0.65
 TOP_K=5
 ```
 *(If `OPENAI_API_KEY` is omitted or left blank, the system automatically uses its local semantic vectorizer and deterministic synthesizer).*
@@ -307,7 +307,7 @@ rag_system/
 | `LLM_MODEL` | `gpt-4o-mini` | LLM generation model |
 | `EMBEDDING_MODEL` | `text-embedding-3-small`| Embedding model name |
 | `VECTOR_DB_PROVIDER` | `local` | Vector store provider (`local`, `qdrant`, `chroma`) |
-| `VECTOR_SIMILARITY_THRESHOLD` | `0.70` | Minimum cosine similarity confidence cutoff |
+| `VECTOR_SIMILARITY_THRESHOLD` | `0.65` | Minimum cosine similarity confidence cutoff |
 | `TOP_K` | `5` | Top-K context chunks retrieved per query |
 | `DATABASE_URL` | `sqlite:///./data/rag_history.db` | Path to persistent relational SQLite database |
 | `CHUNK_SIZE` | `1000` | Target character size for text chunks |
