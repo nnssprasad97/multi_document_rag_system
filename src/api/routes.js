@@ -30,16 +30,28 @@ const upload = multer({
 function createRouter(ragOrchestrator) {
   const router = express.Router();
 
+  const handleUploadFields = (req, res, next) => {
+    upload.fields([
+      { name: 'files', maxCount: 20 },
+      { name: 'file', maxCount: 1 }
+    ])(req, res, (err) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'Upload validation failed',
+          message: err.message
+        });
+      }
+      next();
+    });
+  };
+
   /**
    * POST /api/upload
    * Accepts multipart/form-data with one or more files ('files' or 'file').
    */
   router.post(
     '/upload',
-    upload.fields([
-      { name: 'files', maxCount: 20 },
-      { name: 'file', maxCount: 1 }
-    ]),
+    handleUploadFields,
     async (req, res) => {
       try {
         const uploadedFiles = [];
@@ -153,6 +165,20 @@ function createRouter(ragOrchestrator) {
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }
+  });
+
+  // Centralized API error handling middleware
+  router.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({
+        error: 'Upload limit exceeded',
+        message: err.message
+      });
+    }
+    return res.status(err.status || 500).json({
+      error: err.name || 'Internal Server Error',
+      message: err.message || 'An unexpected error occurred.'
+    });
   });
 
   return router;

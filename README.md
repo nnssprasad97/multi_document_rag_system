@@ -127,7 +127,7 @@ docker compose down
 
 ## 🧪 Running Automated Tests
 
-Run the complete suite of 22 unit, integration, and scenario tests:
+Run the complete suite of 29 unit, integration, error handling, and scenario tests:
 ```bash
 npm test
 ```
@@ -143,6 +143,7 @@ npm test
   3. *Hallucination Prevention*: Graceful fallback on out-of-scope queries (`"What is the capital of France?"`).
   4. *Conversational Follow-up*: Multi-turn dialogue with pronoun resolution (`"they"`).
 - **`tests/api.test.js`**: HTTP integration tests for `POST /api/upload`, `POST /api/chat`, and `GET /api/documents`.
+- **`tests/error_handling.test.js`**: Rejection of unsupported file formats, empty queries, invalid payloads, and boundary conditions.
 
 ---
 
