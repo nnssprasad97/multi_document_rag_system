@@ -83,8 +83,8 @@ Large Language Models operate on finite context windows, and embedding entire 50
 ### 1. Installation
 Clone the repository and install dependencies:
 ```bash
-git clone <repository-url>
-cd rag_system
+git clone https://github.com/nnssprasad97/multi_document_rag_system.git
+cd multi_document_rag_system
 npm install
 ```
 
